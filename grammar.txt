@@ -1,0 +1,5 @@
+S -> TA | BA | AB | b
+A -> AC | a
+T -> AB
+B -> b
+C -> a
