@@ -5,11 +5,13 @@ class CFG:
         
 
         #Mapping non terminal syms
+        #setiap non terminal di hubungkan dengan urutan angkanya
         for production_rule in grammar:
             self.non_terminal_count +=1
             self.non_terminal[production_rule[0]] = self.non_terminal_count
         
         #mapping syms
+        #mendata arah transisi
         self.mapping = ["notvalid" for i in range(self.non_terminal_count+1)]
         for production_rule in grammar:
             self.mapping[self.non_terminal[production_rule[0]]] = production_rule[1]
