@@ -6,7 +6,7 @@ class CFG:
         #file read and fetching rules
         f = open(filename, "r")
         for rules in f :
-            if (rules[:2] != "//" and rules!="\n"):
+            if (rules[:2] != "//" and rules[:2]!="\n"):
                 if (rules[len(rules)-1:] == '\n'):
                     rules = rules[:len(rules)-1]
                 temp = rules.split(" -> ")
@@ -16,6 +16,7 @@ class CFG:
         grammar = set_of_rules
         self.non_terminal_count = 0
         self.non_terminal = {}
+        print(grammar)
         
 
         #Mapping non terminal syms
@@ -52,6 +53,7 @@ class CFG:
                         for syms in self.mapping[l]:
                             if (len(syms)==1):
                                 continue
+                            print(syms)
                             b = self.non_terminal[syms[0]]
                             c = self.non_terminal[syms[1]]
                             if (table[k][j][b] and table[i - k][j+k][c]):
