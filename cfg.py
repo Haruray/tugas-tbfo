@@ -6,11 +6,12 @@ class CFG:
         #file read and fetching rules
         f = open(filename, "r")
         for rules in f :
-            if (rules[len(rules)-1:] == '\n'):
-                rules = rules[:len(rules)-1]
-            temp = rules.split(" -> ")
-            temp[1] = temp[1].split(" | ")
-            set_of_rules.append(temp)
+            if (rules[:2] != "//" and rules!="\n"):
+                if (rules[len(rules)-1:] == '\n'):
+                    rules = rules[:len(rules)-1]
+                temp = rules.split(" -> ")
+                temp[1] = temp[1].split(" | ")
+                set_of_rules.append(temp)
 
         grammar = set_of_rules
         self.non_terminal_count = 0

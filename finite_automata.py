@@ -35,13 +35,14 @@ def reserved_word_check(var_name):
     return false kalau masuk ke reserved words
     """
     state = 0
-    accept = 69
-    reject = 70
+    accept = 99
+    reject = 100
     meet_null = False
     accepting = {accept}
-    # reserved words yg dimasukkan : if, in, is, import, False, True, def, return, None, continue, for, class, from, while, and, not, with, as, elif, else, or, pass
+    # reserved words yg dimasukkan : if, in, is, import, False, True, def, return, None, continue, for, class, from, while, and, not, with, as, elif, else, or, pass,
+    # break, raise
     transitions = {
-        0 : {'i' : 1, 'F' : 6, 'd': 10, 'r' : 12, 'N': 17, 'c':20, 'f': 27, 'T': 29, 'w' : 37, 'a' : 41, 'n' : 43, 'a' : 47, 'e' : 48, 'o': 51, 'p' : 52},
+        0 : {'i' : 1, 'F' : 6, 'd': 10, 'r' : 12, 'N': 17, 'c':20, 'f': 27, 'T': 29, 'w' : 37, 'a' : 41, 'n' : 43, 'a' : 47, 'e' : 48, 'o': 51, 'p' : 52, 'b' : 55, 'r' : 59},
         1 : {'f' : accept, 'n': accept, 'm' : 2, 's': accept},
         2 : {'p' : 3},
         3 : {'o' : 4},
@@ -96,8 +97,17 @@ def reserved_word_check(var_name):
         52 : {'a' : 53},
         53 : {'s' : 54},
         54 : {'s' : accept},
-        69 : {'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_1234567890' : 70},
-        70 : {'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_1234567890' : 70}
+        55 : {'r' : 56},
+        56 : {'e' : 57},
+        57 : {'a' : 58},
+        58 : {'k' : accept},
+        59 : {'a' : 60},
+        60 : {'i' : 61},
+        61 : {'s' : 62},
+        62 : {'e' : accept},
+
+        99 : {'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_1234567890' : reject},
+        100 : {'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_1234567890' : reject}
     }
 
     for c in var_name:
