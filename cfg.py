@@ -1,5 +1,18 @@
 class CFG:
-    def __init__(self, grammar):
+    def __init__(self, filename):
+        set_of_rules = []
+        rule=[]
+
+        #file read and fetching rules
+        f = open(filename, "r")
+        for rules in f :
+            if (rules[len(rules)-1:] == '\n'):
+                rules = rules[:len(rules)-1]
+            temp = rules.split(" -> ")
+            temp[1] = temp[1].split(" | ")
+            set_of_rules.append(temp)
+
+        grammar = set_of_rules
         self.non_terminal_count = 0
         self.non_terminal = {}
         
