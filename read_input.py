@@ -1,8 +1,8 @@
-reserved_words = ["if"]
+reserved_words = {"if" : "a"}
 mandatory_sym = [":"]
-operators = ["+", "-", "/", "*", ">=", ">", "<=", "<", "==", "!=", "!"]
+operators = ["+", "-", "/", "*", ">", ">=", "<=", "<", "==", "!=", "!"]
 EMPTY_STRING = ""
-VAR_STRING = "/var/"
+VAR_STRING = "/"
 
 def ignore_indent(string):
     new_string = ""
@@ -40,16 +40,17 @@ def operator_split(string_array):
     result = list(set(result))
     return result
 
-def process_input():
+def process_input(filename):
     global reserved_words, mandatory_sym, operators,EMPTY_STRING,VAR_STRING
-    f = open('test.py', 'r')
+    f = open(filename, 'r')
     data = f.read()
     processed_data = []
     temp = data
-    for key in (reserved_words + mandatory_sym):
+    for key in (list(reserved_words.keys()) + mandatory_sym):
         temp = temp.replace(key, EMPTY_STRING)
 
     variables_with_operators = ignore_indent_array(temp.split("\n"))
+    variables_with_operators[:] = [x for x in variables_with_operators if x]
     variables = operator_split(variables_with_operators)
     variables_with_operators_processed = []
 
@@ -58,7 +59,6 @@ def process_input():
         for var in variables:
             temp_var_op = temp_var_op.replace(var, VAR_STRING)
         variables_with_operators_processed.append(temp_var_op)
-    print(variables_with_operators_processed)
         
     #disini idenya adalah merubah operasi operator dari :
     # a > b (contoh), menjadi
@@ -66,14 +66,10 @@ def process_input():
 
     for i in range(len(variables_with_operators)):
         data = data.replace(variables_with_operators[i], variables_with_operators_processed[i])
+    for key in reserved_words.keys():
+        data = data.replace(key,reserved_words[key])
 
-    data = data.split("\n")
-    for i in range(len(data)):
-        data[i] = ignore_indent(data[i])
-        data[i] += '\n'
-        
+    data = data.replace(" ","")
+    data = data.replace("\n","@")
+    print(data)
     return data
-
-process_input()
-
-

@@ -11,12 +11,13 @@ class CFG:
                     rules = rules[:len(rules)-1]
                 temp = rules.split(" -> ")
                 temp[1] = temp[1].split(" | ")
+                #di split lagi
+                for i in range(len(temp[1])):
+                    temp[1][i] = temp[1][i].split(" ")
                 set_of_rules.append(temp)
-
         grammar = set_of_rules
         self.non_terminal_count = 0
         self.non_terminal = {}
-        print(grammar)
         
 
         #Mapping non terminal syms
@@ -24,6 +25,7 @@ class CFG:
         for production_rule in grammar:
             self.non_terminal_count +=1
             self.non_terminal[production_rule[0]] = self.non_terminal_count
+        print(self.non_terminal)
         
         #mapping syms
         #mendata arah transisi
@@ -36,13 +38,14 @@ class CFG:
         #https://en.wikipedia.org/wiki/CYK_algorithm
         #komentar lebih lengkap kedepannya, ini masih coba coba
         str_len = len(str)
-        character_limit = 100
+        character_limit = 1000
         table = [[[False for i in range(character_limit)] for j in range(character_limit)] for i in range (self.non_terminal_count)]
 
         for i in range(1,str_len+1):
             for j in range(1, self.non_terminal_count+1):
                 for k in self.mapping[j]:
                     if (k[0] == str[i-1]):
+                        print(k[0])
                         table[1][i][j] = True
                         break
 
@@ -53,10 +56,10 @@ class CFG:
                         for syms in self.mapping[l]:
                             if (len(syms)==1):
                                 continue
-                            print(syms)
                             b = self.non_terminal[syms[0]]
                             c = self.non_terminal[syms[1]]
                             if (table[k][j][b] and table[i - k][j+k][c]):
+                                print("(b,c,sym[0],sym[1]) : ",b,c,syms[0],syms[1])
                                 table[i][j][l] = True
                                 break
         

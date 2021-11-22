@@ -1,7 +1,7 @@
 S -> CODE
 CODE -> CODE NEW_CODE | NEWLINE CODE | CODE NEWLINE | IF_LOOP
 NEW_CODE -> NEWLINE CODE
-NEWLINE -> \n
+NEWLINE -> @
 
 //if thing
 IF_LOOP -> IF_HEAD | IF_HEAD CODE
@@ -17,5 +17,5 @@ SINGLE_LOGIC_OPERATOR -> not
 
 //misc
 COLON -> :
-IF -> if
-OPERAND -> /var/
+IF -> a
+OPERAND -> /
