@@ -25,13 +25,32 @@ class CFG:
         for production_rule in grammar:
             self.non_terminal_count +=1
             self.non_terminal[production_rule[0]] = self.non_terminal_count
-        print(self.non_terminal)
         
         #mapping syms
         #mendata arah transisi
         self.mapping = ["notvalid" for i in range(self.non_terminal_count+1)]
         for production_rule in grammar:
             self.mapping[self.non_terminal[production_rule[0]]] = production_rule[1]
+
+        
+    def cnf_convert(self):
+        dummy = 1
+        print(self.mapping)
+        for i in range(1, len(self.mapping)):
+            while (len(self.mapping[i][0]) > 2):
+                new_rule = "DUMMY" + str(dummy)
+                dummy += 1
+                new_rule_target = []
+                for j in range(1,-1,-1):
+                    new_rule_target.append(self.mapping[i][0][len(self.mapping[i][0])-1-j])
+                    self.mapping[i][0].pop(len(self.mapping[i][0])-1-j)
+
+                self.non_terminal_count += 1
+                self.non_terminal[new_rule] = self.non_terminal_count
+                self.mapping.append([new_rule_target])
+                
+                
+                self.mapping[i][0].append(new_rule)
 
     def input_check(self, str):
         #algoritmanya berdasarkan pseudocode ini :
@@ -45,7 +64,6 @@ class CFG:
             for j in range(1, self.non_terminal_count+1):
                 for k in self.mapping[j]:
                     if (k[0] == str[i-1]):
-                        print(k[0])
                         table[1][i][j] = True
                         break
 
@@ -59,7 +77,6 @@ class CFG:
                             b = self.non_terminal[syms[0]]
                             c = self.non_terminal[syms[1]]
                             if (table[k][j][b] and table[i - k][j+k][c]):
-                                print("(b,c,sym[0],sym[1]) : ",b,c,syms[0],syms[1])
                                 table[i][j][l] = True
                                 break
         

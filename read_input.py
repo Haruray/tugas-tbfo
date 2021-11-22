@@ -71,5 +71,4 @@ def process_input(filename):
 
     data = data.replace(" ","")
     data = data.replace("\n","@")
-    print(data)
     return data

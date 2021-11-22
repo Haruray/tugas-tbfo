@@ -7,6 +7,7 @@ dan berhasil. rule sederhana berada di grammar2.txt
 contoh input file ada di test.py
 """
 grammar = CFG("grammar2.txt")
+grammar.cnf_convert()
 grammar.input_check(process_input('test.py'))
 #grammar.input_check("a/>/:@")
 #grammar.input_check("aab")
