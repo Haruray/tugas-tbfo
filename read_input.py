@@ -1,74 +1,83 @@
-reserved_words = {"if" : "a"}
+import re
+from typing import final
+
+reserved_words = {
+    "if" : "a", 
+    "class" : "b", 
+    "False" : "c", 
+    "True" : "d", 
+    "is" : "e",
+    "return" : "f",
+    "None" : "g",
+    "continue" :"h",
+    "for" : "i",
+    "def" : "j",
+    "from" : "k",
+    "while" : "n",
+    "with" : "m",
+    "as" : "o",
+    "elif" : "p",
+    "else" : "q",
+    "import" : "r",
+    "pass" : "s",
+    "break" : "t",
+    "in" : "u",
+    "raise" : "v"
+    }
 mandatory_sym = [":"]
-operators = ["+", "-", "/", "*", ">", ">=", "<=", "<", "==", "!=", "!"]
+operators = ["+", "-", "/", "*", ">", ">=", "<=", "<", "==", "!=", "and","or", "not", "+=", "-=", "%"]
 EMPTY_STRING = ""
 VAR_STRING = "/"
+CONTS_STRING = "|"
 
-def ignore_indent(string):
-    new_string = ""
-    start_char = False
-    for c in string:
-        if (c == ' ' and not start_char):
-            continue
-        elif (c!= ' ' and not start_char):
-            start_char = True
-            new_string += c
-        elif (start_char):
-            new_string += c
-    return new_string
-def ignore_indent_before_after(string):
-    new_string = ignore_indent(string)
-    new_string = ignore_indent(new_string[::-1])
-    return new_string[::-1]
-def ignore_indent_array(array):
-    new_array = []
-    for e in array:
-        new_array.append(ignore_indent_before_after(e))
-    return new_array
-
-def operator_split(string_array):
-    global operators
-    result = []
-    for string in string_array:
-        temp = [string]
-        i = 0
-        while (len(temp)==1):
-            temp = string.split(operators[i])
-            i += 1
-        result += temp
-    result = ignore_indent_array(result)
-    result = list(set(result))
-    return result
+def variable_or_const_check(string):
+    """
+    CEK APAKAH STRING MERUPAKAN VARIABLE ATAU CONST
+    CONST DISINI ADALAH APAPUN YG TIDAK BISA MENJADI ANGKA, DAN STRING TERMASUK CONST JUGA
+    """
+    is_const = False
+    if ((string[0]=="\"" or string[0]=="\'") and (string[len(string)-1]=="\"" or string[len(string)-1]=="\'")):
+        is_const = True
+        return is_const
+    else:
+        try:
+            number = int(string)
+            number = float(string)
+            is_const = True
+        except:
+            is_const = False
+        finally:
+            return is_const
 
 def process_input(filename):
     global reserved_words, mandatory_sym, operators,EMPTY_STRING,VAR_STRING
     f = open(filename, 'r')
     data = f.read()
-    processed_data = []
+
+    #LANGKAH 1 : HAPUS SEMUA RESERVED WORDS
     temp = data
     for key in (list(reserved_words.keys()) + mandatory_sym):
-        temp = temp.replace(key, EMPTY_STRING)
+        temp = re.sub(r'\b' + key +r'\b', EMPTY_STRING, temp)
+    #LANGKAH 2 : HAPUS SEMUA OPERATOR
+    for e in (operators + mandatory_sym):
+        temp = temp.replace(e,EMPTY_STRING)
+    #LANGKAH 3 : DAPATKAN SEMUA VARIABLE DAN KONSTANT. ANGGAP NAMA DEF DAN IMPORT SEBAGAI VARIABLE JUGA EHE, DAN STRING DIANGGAP SEBAGAI CONST
+    temp2 = temp.replace("\n","")
+    temp2 = temp2.split(" ")
+    temp2 = [x for x in temp2 if x] #berisi semua data var dan konst
 
-    variables_with_operators = ignore_indent_array(temp.split("\n"))
-    variables_with_operators[:] = [x for x in variables_with_operators if x]
-    variables = operator_split(variables_with_operators)
-    variables_with_operators_processed = []
+    #LANGKAH 4 : REPLACE SEMUA VAR DAN CONST SESUAI DENGAN STRING YG COCOK
+    for e in temp2 :
+        if (variable_or_const_check(e)):
+            replacement = CONTS_STRING
+        else:
+            replacement = VAR_STRING
+        data = re.sub(r'\b' + e +r'\b', replacement, data)
+    #print(temp2)
+    #print(data)
 
-    for var_op in variables_with_operators:
-        temp_var_op = var_op
-        for var in variables:
-            temp_var_op = temp_var_op.replace(var, VAR_STRING)
-        variables_with_operators_processed.append(temp_var_op)
-        
-    #disini idenya adalah merubah operasi operator dari :
-    # a > b (contoh), menjadi
-    # /var/ > /var/, untuk kemudahan pemrosesan CFG. masih in progress
-
-    for i in range(len(variables_with_operators)):
-        data = data.replace(variables_with_operators[i], variables_with_operators_processed[i])
-    for key in reserved_words.keys():
-        data = data.replace(key,reserved_words[key])
-
+    #LANGKAH 5 : HAPUS SPASI DAN NEWLINE AGAR MEMPERMUDAH PENGECEKAN
     data = data.replace(" ","")
     data = data.replace("\n","@")
+    #print(data)
     return data

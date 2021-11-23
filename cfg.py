@@ -35,7 +35,6 @@ class CFG:
         
     def cnf_convert(self):
         dummy = 1
-        print(self.mapping)
         for i in range(1, len(self.mapping)):
             while (len(self.mapping[i][0]) > 2):
                 new_rule = "DUMMY" + str(dummy)
