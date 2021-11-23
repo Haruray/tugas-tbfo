@@ -21,13 +21,20 @@ reserved_words = {
     "pass" : "s",
     "break" : "t",
     "in" : "u",
-    "raise" : "v"
+    "raise" : "v",
+    "range" : "w",
     }
 mandatory_sym = [":"]
 operators = ["+", "-", "/", "*", ">", ">=", "<=", "<", "==", "!=", "and","or", "not", "+=", "-=", "%"]
+operators_substitute = {
+    "and" : "&",
+    "or" : "#",
+    "not" : "!"
+}
 EMPTY_STRING = ""
-VAR_STRING = "/"
-CONTS_STRING = "|"
+VAR_STRING = "^"
+CONTS_STRING = "~"
+NEWLINE_CONST = "@"
 
 def variable_or_const_check(string):
     """
@@ -72,11 +79,17 @@ def process_input(filename):
         else:
             replacement = VAR_STRING
         data = re.sub(r'\b' + e +r'\b', replacement, data)
-    #print(temp2)
-    #print(data)
+    
+    #LANGKAH 5 : REPLACE OPERATORS_SUBSTITUTE
+    for e in operators_substitute.keys() :
+        data = re.sub(r'\b' + e + r'\b', operators_substitute[e], data)
 
-    #LANGKAH 5 : HAPUS SPASI DAN NEWLINE AGAR MEMPERMUDAH PENGECEKAN
+    #LANGKAH 6 : REPLACE RESERVED_WORDS
+    for e in reserved_words.keys() :
+        data = re.sub(r'\b' + e + r'\b', reserved_words[e], data)
+
+    #LANGKAH 7 : HAPUS SPASI DAN NEWLINE AGAR MEMPERMUDAH PENGECEKAN
     data = data.replace(" ","")
-    data = data.replace("\n","@")
+    data = data.replace("\n",NEWLINE_CONST)
     #print(data)
     return data

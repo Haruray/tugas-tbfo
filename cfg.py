@@ -36,20 +36,23 @@ class CFG:
     def cnf_convert(self):
         dummy = 1
         for i in range(1, len(self.mapping)):
-            while (len(self.mapping[i][0]) > 2):
-                new_rule = "DUMMY" + str(dummy)
-                dummy += 1
-                new_rule_target = []
-                for j in range(1,-1,-1):
-                    new_rule_target.append(self.mapping[i][0][len(self.mapping[i][0])-1-j])
-                    self.mapping[i][0].pop(len(self.mapping[i][0])-1-j)
+            for k in range(len(self.mapping[i])):
+                while (len(self.mapping[i][k]) > 2):
+                    new_rule = "DUMMY" + str(dummy)
+                    dummy += 1
+                    new_rule_target = []
+                    for j in range(1,-1,-1):
+                        new_rule_target.append(self.mapping[i][k][len(self.mapping[i][k])-1-j])
+                        self.mapping[i][k].pop(len(self.mapping[i][k])-1-j)
 
-                self.non_terminal_count += 1
-                self.non_terminal[new_rule] = self.non_terminal_count
-                self.mapping.append([new_rule_target])
-                
-                
-                self.mapping[i][0].append(new_rule)
+                    self.non_terminal_count += 1
+                    self.non_terminal[new_rule] = self.non_terminal_count
+                    self.mapping.append([new_rule_target])
+                    
+                    
+                    self.mapping[i][k].append(new_rule)
+        #print(self.non_terminal)
+        #print(self.mapping)
 
     def input_check(self, str):
         #algoritmanya berdasarkan pseudocode ini :
