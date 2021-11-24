@@ -24,7 +24,7 @@ reserved_words = {
     "raise" : "v",
     "range" : "w",
     }
-mandatory_sym = [":"]
+mandatory_sym = [":", ",", "(", ")", "[", "]"]
 operators = ["+", "-", "/", "*", ">", ">=", "<=", "<", "==", "!=", "and","or", "not", "+=", "-=", "%"]
 operators_substitute = {
     "and" : "&",
@@ -58,15 +58,19 @@ def variable_or_const_check(string):
 def process_input(filename):
     global reserved_words, mandatory_sym, operators,EMPTY_STRING,VAR_STRING
     f = open(filename, 'r')
-    data = f.read()
+    #data = f.read()
+    data = ""
+    #LANGKAH 0 ; PER BARIS TAMBAHIN SPACE
+    for line in f:
+        data += (line + " ")
 
     #LANGKAH 1 : HAPUS SEMUA RESERVED WORDS
     temp = data
-    for key in (list(reserved_words.keys()) + mandatory_sym):
+    for key in (list(reserved_words.keys())):
         temp = re.sub(r'\b' + key +r'\b', EMPTY_STRING, temp)
     #LANGKAH 2 : HAPUS SEMUA OPERATOR
     for e in (operators + mandatory_sym):
-        temp = temp.replace(e,EMPTY_STRING)
+        temp = temp.replace(e," ")
     #LANGKAH 3 : DAPATKAN SEMUA VARIABLE DAN KONSTANT. ANGGAP NAMA DEF DAN IMPORT SEBAGAI VARIABLE JUGA EHE, DAN STRING DIANGGAP SEBAGAI CONST
     temp2 = temp.replace("\n","")
     temp2 = temp2.split(" ")
@@ -82,7 +86,7 @@ def process_input(filename):
     
     #LANGKAH 5 : REPLACE OPERATORS_SUBSTITUTE
     for e in operators_substitute.keys() :
-        data = re.sub(r'\b' + e + r'\b', operators_substitute[e], data)
+        data = re.sub(r'\b' + e + r'\b', " "+ operators_substitute[e] +" ", data)
 
     #LANGKAH 6 : REPLACE RESERVED_WORDS
     for e in reserved_words.keys() :
@@ -91,5 +95,7 @@ def process_input(filename):
     #LANGKAH 7 : HAPUS SPASI DAN NEWLINE AGAR MEMPERMUDAH PENGECEKAN
     data = data.replace(" ","")
     data = data.replace("\n",NEWLINE_CONST)
+
+    data += "@."
     #print(data)
     return data

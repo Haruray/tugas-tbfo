@@ -1,3 +1,6 @@
+from typing import final
+
+
 class CFG:
     def __init__(self, filename):
         set_of_rules = []
@@ -51,15 +54,22 @@ class CFG:
                     
                     
                     self.mapping[i][k].append(new_rule)
-        #print(self.non_terminal)
-        #print(self.mapping)
+        #NOW, DELETE UNIT PRODUCTIONS
+        #KELAMAAN FUCK YOU
+        """
+        for i in range(1, len(self.mapping)):
+            for k in range(len(self.mapping[i])):
+                if (len(self.mapping[i][k]) == 1):
+                    print("cok : ", self.mapping[i][k])
+        """
+                
 
     def input_check(self, str):
         #algoritmanya berdasarkan pseudocode ini :
         #https://en.wikipedia.org/wiki/CYK_algorithm
         #komentar lebih lengkap kedepannya, ini masih coba coba
         str_len = len(str)
-        character_limit = 1000
+        character_limit = len(str)+self.non_terminal_count+1
         table = [[[False for i in range(character_limit)] for j in range(character_limit)] for i in range (self.non_terminal_count)]
 
         for i in range(1,str_len+1):
@@ -76,6 +86,7 @@ class CFG:
                         for syms in self.mapping[l]:
                             if (len(syms)==1):
                                 continue
+                            #print("(syms[0], syms[1] : ",syms[0],syms[1])
                             b = self.non_terminal[syms[0]]
                             c = self.non_terminal[syms[1]]
                             if (table[k][j][b] and table[i - k][j+k][c]):
@@ -86,3 +97,16 @@ class CFG:
             print("Accepted")
         else:
             print("Not accepted")
+    
+    def print_grammar(self):
+        first = True
+        for e in self.non_terminal.keys():
+            print(e,"->",end=" ")
+            for map in self.mapping[self.non_terminal[e]]:
+                if first:
+                    print(map, end="")
+                    first = False
+                else :
+                    print(" |",map, end="")
+            print()
+            first = True

@@ -6,9 +6,10 @@ untuk sementara, grammar dan pemrosesan hanya menghandle bentuk if var > var : (
 dan berhasil. rule sederhana berada di grammar2.txt
 contoh input file ada di test.py
 """
-grammar = CFG("grammar2.txt")
+grammar = CFG("grammar3.txt")
 grammar.cnf_convert()
-process_input('test.py')
-#grammar.input_check(process_input('test.py'))
-grammar.input_check("a/>/:")
+#grammar.print_grammar()
+print(process_input('test.py'))
+grammar.input_check(process_input('test.py'))
+#grammar.input_check("co")
 #grammar.input_check("aab")
