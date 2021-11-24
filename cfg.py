@@ -54,14 +54,6 @@ class CFG:
                     
                     
                     self.mapping[i][k].append(new_rule)
-        #NOW, DELETE UNIT PRODUCTIONS
-        #KELAMAAN FUCK YOU
-        """
-        for i in range(1, len(self.mapping)):
-            for k in range(len(self.mapping[i])):
-                if (len(self.mapping[i][k]) == 1):
-                    print("cok : ", self.mapping[i][k])
-        """
                 
 
     def input_check(self, str):
@@ -96,7 +88,7 @@ class CFG:
         if (table[str_len][1][1]):
             print("Accepted")
         else:
-            print("Not accepted")
+            print("Syntax Error")
     
     def print_grammar(self):
         first = True
