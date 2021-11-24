@@ -1,6 +1,3 @@
-from typing import final
-
-
 class CFG:
     def __init__(self, filename):
         set_of_rules = []
